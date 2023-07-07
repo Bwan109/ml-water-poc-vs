@@ -5,10 +5,26 @@ stages:
     deps:
     - path: preprocess.py
       hash: md5
-      md5: 74019b08bd9e3e76d5b559b52b83dbb2
-      size: 393
+      md5: ae8f5834a0b6072574dfe8aa48f1432a
+      size: 386
     outs:
-    - path: ./data/water_preprocessed.csv
+    - path: water_preprocessed.csv
       hash: md5
       md5: de762137c7faa73b318dacfc6b250da3
       size: 261471
+  train:
+    cmd: python train.py
+    deps:
+    - path: train.py
+      hash: md5
+      md5: c7b57b605cb9110395666e3e64147976
+      size: 2616
+    - path: water_preprocessed.csv
+      hash: md5
+      md5: de762137c7faa73b318dacfc6b250da3
+      size: 261471
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 72421e17d10bf1bda7a8d95aa7b3500d
+      size: 107

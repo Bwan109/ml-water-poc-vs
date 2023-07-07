@@ -4,12 +4,12 @@ stages:
     deps:
     - preprocess.py
     outs:
-    - ./data/water_preprocessed.csv
+    - water_preprocessed.csv
   train:
     cmd: python train.py
     deps:
     - train.py
-    - ./data/water_preprocessed.csv
+    - water_preprocessed.csv
     metrics:
     - metrics.json:
         cache: false
