@@ -21,7 +21,7 @@ import json
 # experiment.log_artifact(artifact)
 
 
-data = pd.read_csv('./data/water_preprocessed.csv',index_col=0)
+data = pd.read_csv('water_preprocessed.csv',index_col=0)
 
 # # Splitting X and Y
 X = data.drop(columns=['is_safe'])
