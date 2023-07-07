@@ -1,0 +1,14 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python preprocess.py
+    deps:
+    - path: preprocess.py
+      hash: md5
+      md5: 74019b08bd9e3e76d5b559b52b83dbb2
+      size: 393
+    outs:
+    - path: ./data/water_preprocessed.csv
+      hash: md5
+      md5: de762137c7faa73b318dacfc6b250da3
+      size: 261471
