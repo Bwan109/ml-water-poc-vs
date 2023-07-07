@@ -1,0 +1,43 @@
+name: MLOps Water Quality Prediction Pipeline
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    #container: docker://dvcorg/cml-py3:latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: iterative/setup-dvc@v1
+      - uses: iterative/setup-cml@v1
+
+      - name: Pull data from DVC
+        run: |
+          dvc pull
+
+      - name: Train model      
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          dvc repro 
+
+          git fetch --prune
+          dvc metrics diff --md main >> report.md
+
+          # Add figure to the report
+          echo "## Validating results" >> report.md
+          cat metrics.json > report.md
+          cml comment create report.md
+      
+      
+      - name: Push the outcomes to DVC remote storage 
+        run: dvc push
