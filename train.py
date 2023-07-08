@@ -1,5 +1,5 @@
 import comet_ml
-from comet_ml import Experiment, Artifact
+#from comet_ml import Experiment, Artifact
 import pandas as pd
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import train_test_split
@@ -10,18 +10,26 @@ from sklearn.neighbors import KNeighborsClassifier
 import pickle
 import json
 
-# experiment = comet_ml.Experiment(
-#     api_key="jNBCAtiZnHlP2dsxXyGOTiJc2",
-#     project_name="VS MLOps Water Quality Prediction PoC"
-# )
+import mlflow
+import mlflow.sklearn
+from mlflow import MlflowClient
+import os 
+from dotenv import load_dotenv
 
-# Tracking dataset CometML
-# artifact = Artifact(name="VS MLOps Water Quality Prediction Dataset PoC", artifact_type="dataset")
-# artifact.add("./data/water_preprocessed.csv")
-# experiment.log_artifact(artifact)
+load_dotenv()
+
+os.environ['MLFLOW_TRACKING_USERNAME'] =  os.getenv("MLFLOW_TRACKING_USERNAME")
+os.environ['MLFLOW_TRACKING_PASSWORD'] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 
-data = pd.read_csv('./data/water_preprocessed.csv',index_col=0)
+os.environ['MLFLOW_TRACKING_URI'] = f'https://dagshub.com/Bwan109/mlops-poc.mlflow'
+mlflow.set_tracking_uri(os.environ['MLFLOW_TRACKING_URI'])
+
+
+#mlflow.set_tracking_uri("https://dagshub.com/Bwan109/mlops-poc.mlflow")
+mlflow.sklearn.autolog()
+
+data = pd.read_csv('water_preprocessed.csv',index_col=0)
 
 # # Splitting X and Y
 X = data.drop(columns=['is_safe'])
@@ -44,21 +52,6 @@ f1_score = clf_report['weighted avg']['f1-score']
 with open("metrics.json", 'w') as outfile:
     json.dump({ "accuracy": accuracy, "precision": precision, "recall": recall, "f1_score": f1_score}, outfile)
 
-# Experiment Tracking
-# def log_classification_report(y_true, y_pred):
-#     report = classification_report(y_true, y_pred, output_dict=True)
-#     for key, value in report.items():
-#         if key == "accuracy":
-#             experiment.log_metric(key, value)
-#         else:
-#             experiment.log_metrics(value, prefix=f"{key}")
-
-
-# with experiment.train():
-#     log_classification_report(train_y, clf_knn.predict(train_x))
-
-# with experiment.test():
-#     log_classification_report(test_y, clf_knn.predict(test_x))
 
 
 # Export model pickle
@@ -66,4 +59,3 @@ with open("./app/modelknn.pkl", "wb") as f:
     pickle.dump(clf_knn,f)
 
 
-# experiment.log_model("VS MLOps Water Quality Prediction Model PoC", "./app/modelknn.pkl")

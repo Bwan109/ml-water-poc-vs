@@ -1,1 +1,5 @@
 data
+water_preprocessed.csv
+.env
+mlruns
+.cometml-runs

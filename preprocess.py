@@ -1,7 +1,7 @@
 
 import pandas as pd
 
-
+#
 # read data file
 df = pd.read_csv('./data/waterQuality1.csv')
 
@@ -14,4 +14,4 @@ df['is_safe'] = df['is_safe'].astype(int)
 
 new = df[['aluminium', 'arsenic', 'cadmium','chloramine', 'chromium','is_safe']].copy()
 
-new.to_csv('./data/water_preprocessed.csv') 
+new.to_csv('water_preprocessed.csv') 
