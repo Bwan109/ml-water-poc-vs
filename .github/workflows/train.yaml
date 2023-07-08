@@ -25,9 +25,16 @@ jobs:
         run: |
           dvc pull -f
 
+      - name: Set up environment variables for Train Model file
+        run: |
+          echo "MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}" >> .env
+          echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}" >> .env
+
       - name: Train model      
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+          
         run: |
           pip install -r requirements.txt
           dvc repro 
@@ -39,6 +46,8 @@ jobs:
           echo "## Validating results" >> report.md
           cat metrics.json > report.md
           cml comment create report.md
+
+
       
       
       - name: Push the outcomes to DVC remote storage 
